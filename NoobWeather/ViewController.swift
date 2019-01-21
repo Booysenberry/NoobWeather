@@ -10,11 +10,19 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var weatherDescription: UILabel!
+    @IBOutlet weak var weatherIcon: UIImageView!
+    @IBOutlet weak var tempRange: UILabel!
+    
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
     }
 
-
+    @IBAction func refreshButton(_ sender: Any) {
+    }
+    
 }
 
