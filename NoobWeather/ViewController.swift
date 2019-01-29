@@ -41,8 +41,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         let userlocation:CLLocationCoordinate2D = manager.location!.coordinate
         latitude = userlocation.latitude
         longitude = userlocation.longitude
-//        print(latitude)
-//        print(longitude)
+        //        print(latitude)
+        //        print(longitude)
         getWeatherData()
     }
     
@@ -63,15 +63,18 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
                 print("No data")
                 return
             }
-            // Serialise data into Dictionary [String : Any]
-            guard let json = (try? JSONSerialization.jsonObject(with: content, options: JSONSerialization.ReadingOptions.mutableContainers)) as? [String: Any] else {
-                print("Not containing JSON")
-                return
+            
+            // Decode data
+            do {
+                let decoder = JSONDecoder()
+                decoder.keyDecodingStrategy = .convertFromSnakeCase
+                let weatherData = try decoder.decode(WeatherData.self, from: content)
+                print(weatherData)
+                
+            } catch let err {
+                print("Err", err)
             }
-            print("Response is \n \(json)")
-            // update UI using the response here
         }
-        // execute the HTTP request
         task.resume()
     }
 }
