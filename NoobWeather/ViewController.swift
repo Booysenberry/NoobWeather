@@ -46,6 +46,10 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         getWeatherData()
     }
     
+    func displayCurrentWeather() {
+        
+    }
+    
     func getWeatherData() {
         let config = URLSessionConfiguration.default
         let session = URLSession(configuration: config)
