@@ -10,17 +10,24 @@ import Foundation
 
 
 struct WeatherData: Codable {
-    let main: Main
-    let weather: [WeatherConditions]
+    
+    struct Main: Codable {
+        var temp: Double
+        var tempMax: Double
+        var tempMin: Double
+    }
+    
+    struct WeatherConditions: Codable {
+        var description: String
+    }
+    
+    var main: Main
+    var weather: [WeatherConditions]
+    var name: String
+    
 }
 
-struct Main: Codable {
-    let temp: Double
-    let tempMax: Double
-    let tempMin: Double
-}
 
-struct WeatherConditions: Codable {
-    let description: String
-}
+
+
 
