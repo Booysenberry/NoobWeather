@@ -3,7 +3,7 @@
 iOS app for checking the current weather based on the user's location
 
 ## Purpose
-I built this to better understand networking in Swift and parsing of JSON data. I chose to use Swift's [URLSession](https://developer.apple.com/documentation/foundation/urlsession) class instead of a third party library (like [Alamofire](https://github.com/Alamofire/Alamofire)) to avoid unnecessary dependencies. 
+I built this to better understand networking in Swift and parsing of JSON data. I chose to use Swift's built in [URLSession](https://developer.apple.com/documentation/foundation/urlsession) class and [Codable](https://developer.apple.com/documentation/swift/codable) instead of relying on third party libraries (like [Alamofire](https://github.com/Alamofire/Alamofire) and [SwiftyJSON](https://github.com/SwiftyJSON/SwiftyJSON)).
 
 ## Built using:
 * Swift 4.2
