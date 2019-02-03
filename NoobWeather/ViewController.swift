@@ -18,6 +18,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     var minTemp: Double?
     var maxTemp: Double?
     var cityName: String?
+    var id: Int?
     var weatherDescription: String?
     
     
@@ -51,6 +52,31 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         latitude = userlocation.latitude
         longitude = userlocation.longitude
         getWeatherData()
+        displayCurrentWeather()
+    }
+    
+    func displayWeatherImage() {
+        if let id = id {
+            
+            switch (id) {
+            case 200...299:
+                weatherIcon.image = UIImage(named: "thunderstorm")
+            case 300...399:
+                weatherIcon.image = UIImage(named: "showerRain")
+            case 500...599:
+                weatherIcon.image = UIImage(named: "Rain")
+            case 600...699:
+                weatherIcon.image = UIImage(named: "snow")
+            case 700...799:
+                weatherIcon.image = UIImage(named: "showerRain")
+            case 800:
+                weatherIcon.image = UIImage(named: "clearSky")
+            case 801...805:
+                weatherIcon.image = UIImage(named: "scatteredClouds")
+            default:
+                break
+            }
+        }
     }
     
     func displayCurrentWeather() {
@@ -59,10 +85,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
                 if let todaysMaxTemp = maxTemp {
                     if let city = cityName {
                         if let currentWeatherDesc = weatherDescription {
-                        cityLabel.text = "\(city)"
-                        currentTempLabel.text = "\(todaysCurrentTemp)"
-                        tempRange.text = "↓\(todaysMinTemp) - ↑\(todaysMaxTemp)"
-                        weatherDescriptionLabel.text = "\(currentWeatherDesc)"
+                            cityLabel.text = "\(city)"
+                            currentTempLabel.text = "\(todaysCurrentTemp)"
+                            tempRange.text = "↓\(todaysMinTemp) - ↑\(todaysMaxTemp)"
+                            weatherDescriptionLabel.text = "\(currentWeatherDesc)"
+                            displayWeatherImage()
                         }
                     }
                 }
@@ -104,21 +131,16 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
                 self.maxTemp = currentWeatherData.main.tempMax
                 self.minTemp = currentWeatherData.main.tempMin
                 self.cityName = currentWeatherData.name
-                // Access first item in weather array
+                // Access description (first item in weather array)
                 self.weatherDescription = currentWeatherData.weather.first?.description
-                
-                print(self.maxTemp!)
-                print(self.minTemp!)
-                print(self.weatherDescription!)
-                
-                
+                // Access id (second item in weather array)
+                self.id = currentWeatherData.weather.last?.id
+    
             } catch let err {
                 print("Err", err)
             }
         }
         task.resume()
     }
-    
-    
 }
 

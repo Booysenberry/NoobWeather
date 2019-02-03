@@ -19,6 +19,7 @@ struct WeatherData: Codable {
     
     struct WeatherConditions: Codable {
         var description: String
+        var id: Int
     }
     
     var main: Main
