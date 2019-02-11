@@ -12,9 +12,7 @@ import Foundation
 struct WeatherData: Codable {
     
     struct Main: Codable {
-        var temp: Double
-        var tempMax: Double
-        var tempMin: Double
+        var temp: Float
     }
     
     struct WeatherConditions: Codable {
