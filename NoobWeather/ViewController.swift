@@ -18,7 +18,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     var cityName: String?
     var id: Int?
     var weatherDescription: String?
-    var userLocated = false
+    var noLocation = true
     
     @IBOutlet weak var cityLabel: UILabel!
     @IBOutlet weak var currentTempLabel: UILabel!
@@ -28,12 +28,24 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        print(noLocation)
+        
         locationManager = CLLocationManager()
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyKilometer
         locationManager.requestWhenInUseAuthorization()
         if CLLocationManager.locationServicesEnabled() {
             locationManager.startUpdatingLocation()
+        }
+        
+        DispatchQueue.global(qos: .background).async {
+            while (self.noLocation) {
+        
+                DispatchQueue.main.sync {
+                self.animateImages()
+                }
+                continue
+            }
         }
     }
     
@@ -44,8 +56,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         self.weatherIcon.animationImages = diceImages;
         self.weatherIcon.animationDuration = 1.0
         self.weatherIcon.startAnimating()
-        cityLabel.text = ""
+        cityLabel.text = "Thinking..."
         currentTempLabel.text = ""
+        weatherDescriptionLabel.text = ""
     }
     
     
@@ -55,11 +68,14 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        userLocated = true
+        noLocation = false
+        print(noLocation)
         locationManager.stopUpdatingLocation()
         let userlocation:CLLocationCoordinate2D = manager.location!.coordinate
         latitude = userlocation.latitude
         longitude = userlocation.longitude
+        getWeatherData()
+        displayCurrentWeather()
         }
     
     
@@ -133,6 +149,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
                 let currentWeatherData = try decoder.decode(WeatherData.self, from: content)
+                print(currentWeatherData)
                 self.currentTemp = currentWeatherData.main.temp
                 self.cityName = currentWeatherData.name
                 // Access description (first item in weather array)
