@@ -19,6 +19,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     var id: Int?
     var weatherDescription: String?
     var noLocation = true
+    private let weatherAPIKey = valueForAPIKey(keyname: "YOUR_APPLICATION_KEY")
     
     @IBOutlet weak var cityLabel: UILabel!
     @IBOutlet weak var currentTempLabel: UILabel!
@@ -28,8 +29,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print(noLocation)
-        
         locationManager = CLLocationManager()
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyKilometer
@@ -37,30 +36,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         if CLLocationManager.locationServicesEnabled() {
             locationManager.startUpdatingLocation()
         }
-        
-        DispatchQueue.global(qos: .background).async {
-            while (self.noLocation) {
-        
-                DispatchQueue.main.sync {
-                self.animateImages()
-                }
-                continue
-            }
-        }
     }
-    
-    func animateImages() {
-        let diceImages: [UIImage] = [
-            UIImage(named: "clearSky.png")!,UIImage(named: "scatteredClouds.png")!,UIImage(named: "Rain.png")!, UIImage(named: "fewClouds.png")!]
         
-        self.weatherIcon.animationImages = diceImages;
-        self.weatherIcon.animationDuration = 1.0
-        self.weatherIcon.startAnimating()
-        cityLabel.text = "Thinking..."
-        currentTempLabel.text = ""
-        weatherDescriptionLabel.text = ""
-    }
-    
     
     @IBAction func refreshButton(_ sender: Any) {
         getWeatherData()
@@ -69,14 +46,13 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         noLocation = false
-        print(noLocation)
         locationManager.stopUpdatingLocation()
         let userlocation:CLLocationCoordinate2D = manager.location!.coordinate
         latitude = userlocation.latitude
         longitude = userlocation.longitude
         getWeatherData()
         displayCurrentWeather()
-        }
+    }
     
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
@@ -127,7 +103,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         let session = URLSession(configuration: config)
         
         // Create URL
-        let url = URL(string: "http://api.openweathermap.org/data/2.5/weather?lat=\(latitude)&lon=\(longitude)&appid=5c1013a7da44573668f4d581562109dd&units=metric")!
+        let url = URL(string: "http://api.openweathermap.org/data/2.5/weather?lat=\(latitude)&lon=\(longitude)&appid=\(weatherAPIKey)&units=metric")!
         
         // Create data task
         let task = session.dataTask(with: url) { data, response, error in
@@ -149,7 +125,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
                 let currentWeatherData = try decoder.decode(WeatherData.self, from: content)
-                print(currentWeatherData)
                 self.currentTemp = currentWeatherData.main.temp
                 self.cityName = currentWeatherData.name
                 // Access description (first item in weather array)
