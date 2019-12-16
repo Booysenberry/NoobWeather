@@ -14,7 +14,7 @@ Open Terminal
 
 Run `git clone https://github.com/Booysenberry/NoobWeather.git`
 
-Open `noobweather.xcodeproj`
+Open `NoobWeather.xcodeproj`
 
 Build and run
 
